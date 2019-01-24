@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Request_configuration_Retailer1" doc:name="HTTP Request configuration" doc:id="7ac80102-97bd-4561-91a4-b19eea2f3069" >
+		<http:request-connection protocol="HTTPS" host="${retailer.1.host}" port="${retailer.1.port}" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration_Retailer2" doc:name="HTTP Request configuration" doc:id="264c43aa-3ac0-4c0d-baa3-7f3e5ac80ef0" >
+		<http:request-connection host="${retailer.2.host}" port="${retailer.2.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration_Retailer3" doc:name="HTTP Request configuration" doc:id="55d38924-ad86-4c80-89dd-1031269af92e" >
+		<http:request-connection host="${retailer.3.host}" port="${retailer.3.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<sub-flow name="api-implementationSub_Flow" doc:id="059c91e2-3f87-408b-86fe-8416cec61ef1" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="34995c5b-0fae-4b9a-bc35-dc165ba8899b" >
+			<route >
+				<http:request method="GET" doc:name="Search from Retailer 1" doc:id="ebe76260-ab01-4684-bd7a-d46d24fadbee" config-ref="HTTP_Request_configuration_Retailer1" path="${retailer.3.path}">
+				<http:query-params ><![CDATA[#[output application/java
+---
+vars.queryParams]]]></http:query-params>
+				
+				</http:request>
+			
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Search from Retailer 2" doc:id="54d6d5d2-956e-47c0-be19-4eb5bfe56211" config-ref="HTTP_Request_configuration_Retailer2" path="${retailer.2.path}">
+			<http:query-params ><![CDATA[#[output application/java
+---
+vars.queryParams]]]></http:query-params>
+				
+				</http:request>
+				
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Search from Retailer 3" doc:id="7af08441-cb88-46fa-89fc-621e49f29dc7" config-ref="HTTP_Request_configuration_Retailer3" path="${retailer.3.path}">
+						<http:query-params ><![CDATA[#[output application/java
+---
+vars.queryParams]]]></http:query-params>
+				
+				</http:request>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Combine Retailer Customer" doc:id="2eff58ce-2217-4da9-8309-4896c6cdb565" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+flatten (payload..*payload default [])
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Final Response" doc:id="ac6cc2e3-d596-4e78-9280-b4687cc12aba" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var aggregatedResult = flatten(payload)  map (parent) -> {
+	combinedData: parent.results map (child) -> {
+
+		id: child.id,
+		firstName: child.first_name,
+		lastName: child.last_name,
+		email: child.email,
+		gender: child.gender,
+		address: child.address,
+		retailer: parent.retailer
+	}
+}
+---
+flatten (aggregatedResult map $.combinedData)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

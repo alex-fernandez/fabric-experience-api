@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="FullUsage" format="json">
+      <types:shape format="weave" example="examples/FullResponse.json"><![CDATA[%dw 2.0
+type FullUsage = {|
+  results: Array<{|
+    id: String, 
+    first_name: String, 
+    last_name: String, 
+    email: String, 
+    gender: String, 
+    address: {|
+      street: String, 
+      city: String, 
+      state: String, 
+      postcode: Number {"typeId": "int"}, 
+      coordinates: {|
+        latitude: String, 
+        longitude: String
+      |}, 
+      timezone: {|
+        offset: String, 
+        description: String
+      |}
+    |}
+  |}>, 
+  retailer: {|
+    name: String, 
+    server: String, 
+    cloudProvider: String
+  |}
+|} {"MetadataFormat": "json",
+"example": "{\"results\":[{\"id\":\"123456789\",\"first_name\":\"Sabrina\",\"last_name\":\"Faltskog\",\"email\":\"sfaltskog0@biglobe.ne.jp\",\"gender\":\"Female\",\"address\":{\"street\":\"9489 rua santa rita \",\"city\":\"curitiba\",\"state\":\"piau\u00ED\",\"postcode\":50874,\"coordinates\":{\"latitude\":\"-71.3786\",\"longitude\":\"108.4957\"},\"timezone\":{\"offset\":\"-12:00\",\"description\":\"Eniwetok, Kwajalein\"}}}],\"retailer\":{\"name\":\"small ax\",\"server\":\"\",\"cloudProvider\":\"azure\"}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="Aggregated" format="json">
+      <types:shape format="weave" example="examples/Aggregated.json"><![CDATA[%dw 2.0
+type Aggregated = Array<{|
+  results: Array<{|
+    id: String, 
+    first_name: String, 
+    last_name: String, 
+    email: String, 
+    gender: String, 
+    address: {|
+      street: String, 
+      city: String, 
+      state: String, 
+      postcode: Number {"typeId": "int"}, 
+      coordinates: {|
+        latitude: String, 
+        longitude: String
+      |}, 
+      timezone: {|
+        offset: String, 
+        description: String
+      |}
+    |}
+  |}>, 
+  retailer: {|
+    name: String, 
+    server: String, 
+    cloudProvider: String
+  |}
+|}> {"MetadataFormat": "json",
+"example": "[{\"results\":[{\"id\":\"123456789\",\"first_name\":\"Sabrina\",\"last_name\":\"Faltskog\",\"email\":\"sfaltskog0@biglobe.ne.jp\",\"gender\":\"Female\",\"address\":{\"street\":\"9489 rua santa rita \",\"city\":\"curitiba\",\"state\":\"piau\u00ED\",\"postcode\":50874,\"coordinates\":{\"latitude\":\"-71.3786\",\"longitude\":\"108.4957\"},\"timezone\":{\"offset\":\"-12:00\",\"description\":\"Eniwetok, Kwajalein\"}}}],\"retailer\":{\"name\":\"small ax\",\"server\":\"\",\"cloudProvider\":\"azure\"}},{\"results\":[{\"id\":\"123456789\",\"first_name\":\"Sabrina\",\"last_name\":\"Faltskog\",\"email\":\"sfaltskog0@biglobe.ne.jp\",\"gender\":\"Female\",\"address\":{\"street\":\"9489 rua santa rita \",\"city\":\"curitiba\",\"state\":\"piau\u00ED\",\"postcode\":50874,\"coordinates\":{\"latitude\":\"-71.3786\",\"longitude\":\"108.4957\"},\"timezone\":{\"offset\":\"-12:00\",\"description\":\"Eniwetok, Kwajalein\"}}}],\"retailer\":{\"name\":\"small ax\",\"server\":\"\",\"cloudProvider\":\"azure\"}},{\"results\":[{\"id\":\"123456789\",\"first_name\":\"Sabrina\",\"last_name\":\"Faltskog\",\"email\":\"sfaltskog0@biglobe.ne.jp\",\"gender\":\"Female\",\"address\":{\"street\":\"9489 rua santa rita \",\"city\":\"curitiba\",\"state\":\"piau\u00ED\",\"postcode\":50874,\"coordinates\":{\"latitude\":\"-71.3786\",\"longitude\":\"108.4957\"},\"timezone\":{\"offset\":\"-12:00\",\"description\":\"Eniwetok, Kwajalein\"}}}],\"retailer\":{\"name\":\"small ax\",\"server\":\"\",\"cloudProvider\":\"azure\"}}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#a0252048-c6e6-4d6d-bfc1-ecbea804bf1d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="FullUsage"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a2c55de4-8b91-44f7-afe7-1163a043af26">
+    <types:processor-declaration/>
+  </types:enrichment>
+  <types:enrichment select="#ac6cc2e3-d596-4e78-9280-b4687cc12aba">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Aggregated"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

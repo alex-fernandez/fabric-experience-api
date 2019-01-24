@@ -1,0 +1,54 @@
+[
+   {
+      "id":"123456789",
+      "firstName":"Sabrina",
+      "lastName":"Faltskog",
+      "email":"sfaltskog0@biglobe.ne.jp",
+      "gender":"Female",
+      "address":{
+         "street":"9489 rua santa rita ",
+         "city":"curitiba",
+         "state":"piauí",
+         "postcode":50874,
+         "coordinates":{
+            "latitude":"-71.3786",
+            "longitude":"108.4957"
+         },
+         "timezone":{
+            "offset":"-12:00",
+            "description":"Eniwetok, Kwajalein"
+         }
+      },
+      "retailer":{
+         "name":"small ax",
+         "server":"",
+         "cloudProvider":"azure"
+      }
+   },
+   {
+      "id":"123456789",
+      "firstName":"Sabrina",
+      "lastName":"Faltskog",
+      "email":"sfaltskog0@biglobe.ne.jp",
+      "gender":"Female",
+      "address":{
+         "street":"9489 rua santa rita ",
+         "city":"curitiba",
+         "state":"piauí",
+         "postcode":50874,
+         "coordinates":{
+            "latitude":"-71.3786",
+            "longitude":"108.4957"
+         },
+         "timezone":{
+            "offset":"-12:00",
+            "description":"Eniwetok, Kwajalein"
+         }
+      },
+      "retailer":{
+         "name":"small ax",
+         "server":"",
+         "cloudProvider":"azure"
+      }
+   }
+]
